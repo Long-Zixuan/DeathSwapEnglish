@@ -1,4 +1,4 @@
-# 死亡交换（Deathswap）
+# Deathswap
 ![Img1](https://mod.3dmgame.com/static/upload/logo/croppedImg_65f98ebf4f8e2.jpg)
 
 ## What is this?
