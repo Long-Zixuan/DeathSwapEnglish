@@ -1,14 +1,14 @@
 {
 	"schemaVersion": 1,
 	"id": "death-swap-mod",
-	"version": "1.4.4",
+	"version": "1.5",
 	"name": "Death Swap Mod",
 	"description": "It is a mod that allows you to play the death swap game in Minecraft.",
 	"authors": [
 		"LoongLy"
 	],
 	"contact": {
-		"homepage": "www.nexusmods.com/",
+		"homepage": "https://www.nexusmods.com/minecraft/mods/655/",
 		"sources": "https://github.com/Long-Zixuan/DeathSwapEnglish"
 	},
 	"license": "CC0-1.0",

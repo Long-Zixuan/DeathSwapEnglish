@@ -1,26 +1,14 @@
 package name.deathswap;
 
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.Message;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.screen.DeathScreen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 ////////////
 import com.mojang.brigadier.CommandDispatcher;
@@ -28,38 +16,21 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.minecraft.advancement.criterion.EffectsChangedCriterion;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.predicate.entity.EntityEffectPredicate;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.EffectCommand;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameMode;
-import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
 
-import net.minecraft.world.World;
-
-import java.awt.*;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
-
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import org.apache.logging.log4j.core.jmx.Server;
 
 
 public class LGDeathSwapMod implements ModInitializer
@@ -83,9 +54,9 @@ public class LGDeathSwapMod implements ModInitializer
 
 	String _modName = "DeathSwap";
 
-	String _modVersion = "1.4.4";
+	String _modVersion = "1.5";
 	//List<BlockPos> safePos = null;
-	String _lastEditTime = "2024/11/05";
+	String _lastEditTime = "2024/12/06";
 
 	String []_modInfo = {_modAuthor,_modName,_modVersion,_lastEditTime};
 	@Override
@@ -152,13 +123,14 @@ public class LGDeathSwapMod implements ModInitializer
 							}
 							// 获取命令参数中的值
 							int swaptime = IntegerArgumentType.getInteger(context, "value");
-							// 更新变量的值
-							deathSwapTime = swaptime;
+
 							if(swaptime<40)
 							{
 								context.getSource().sendFeedback(new LiteralText("Swap time can't be less than 40"), false);
 								return 1;
 							}
+							// 更新变量的值
+							deathSwapTime = swaptime;
 							// 发送消息给执行命令的玩家
 							context.getSource().sendFeedback(new LiteralText("Swap time updated to " + swaptime), false);
 							return 1;
@@ -211,9 +183,9 @@ public class LGDeathSwapMod implements ModInitializer
 	{
 		Text msg = new LiteralText("Death Swap Version:"+_modVersion+" Author:"+_modAuthor+"(Lagging_Warrior)  Last update date"+_lastEditTime).formatted(Formatting.YELLOW);
 		source.sendFeedback(msg, false);
-		Text msg2 = new LiteralText("Download link(Updating): www.nexusmods.com").styled(style->style
-			.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "www.nexusmods.com"))
-			.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("Click to jump to: " + "www.nexusmods.com")))
+		Text msg2 = new LiteralText("Download link(Updating): https://www.nexusmods.com/minecraft/mods/655").styled(style->style
+			.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.nexusmods.com/minecraft/mods/655"))
+			.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("Click to jump to: " + "https://www.nexusmods.com/minecraft/mods/655")))
 			.withColor(Formatting.UNDERLINE));
 		source.sendFeedback(msg2, false);
 		Text gitmsg = new LiteralText("Github: https://github.com/Long-Zixuan/DeathSwapEnglish").styled(style->style
@@ -229,7 +201,7 @@ public class LGDeathSwapMod implements ModInitializer
 		winText = "No Winner";
 		MinecraftServer server = source.getMinecraftServer();
 		//server.getGameRules().get(GameRules.DO_IMMEDIATE_RESPAWN).set(true, server);
-		World world = server.getWorld(World.OVERWORLD);
+		//World world = server.getWorld(World.OVERWORLD);
 		List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList();
 		playerNum = players.size();
 		if (players.size() < 2)
@@ -246,16 +218,8 @@ public class LGDeathSwapMod implements ModInitializer
 
 		for (ServerPlayerEntity player : players)
 		{
-			Text msg = new LiteralText("Death swap game started!").formatted(Formatting.YELLOW);
+			Text msg = new LiteralText("Loading....").formatted(Formatting.YELLOW);
 			player.sendMessage(msg,true);
-			player.setGameMode(GameMode.SURVIVAL);
-			player.setHealth(20);
-			player.getHungerManager().setFoodLevel(20);
-			player.getHungerManager().setSaturationLevel(1.0F);
-			//player.clearActiveItem();
-			player.inventory.clear();
-
-
 			Random random = new Random();
 			//BlockPos blockPos = findSafePos(random.nextInt(5000),50, random.nextInt(5000));
 			//BlockPos blockPos = findSafePos();
@@ -263,9 +227,18 @@ public class LGDeathSwapMod implements ModInitializer
 			player.setInvulnerable(true);
 			if(needTransPos)
 			{
-				AsyncThread asyncThread = new AsyncThread(player,world);
+				World world = player.world;
+				TransAsyncThread asyncThread = new TransAsyncThread(player,world);
 				asyncThread.start();
 			}
+			player.setGameMode(GameMode.SURVIVAL);
+			player.setHealth(20);
+			player.getHungerManager().setFoodLevel(20);
+			player.getHungerManager().setSaturationLevel(1.0F);
+			//player.clearActiveItem();
+			player.inventory.clear();
+			msg = new LiteralText("Death swap game start!").formatted(Formatting.YELLOW);
+			player.sendMessage(msg,true);
 		}
 	}
 	private void startGame(ServerCommandSource source)
